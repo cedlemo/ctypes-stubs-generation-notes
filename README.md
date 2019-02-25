@@ -55,3 +55,4 @@ let () = main ()
 
 ### Launch the different phases of compile and file generation
 
+![Ctypes Stubs generation schema](https://github.com/cedlemo/ctypes-stubs-generation-notes/raw/master/Ctypes_Stubs_generation.png)
