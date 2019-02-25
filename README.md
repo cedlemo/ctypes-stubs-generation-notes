@@ -1,4 +1,4 @@
-# Understanding Ctypes stubs generator.
+# Understanding Ctypes C stubs generator.
 
 ## Introduction
 
@@ -11,6 +11,8 @@ But this has some limitations with:
   * structures
   * [enums](https://discuss.ocaml.org/t/ctypes-enum-how-to-make-it-work/456/4?u=cedlemo)
 - constants
+
+In order to be able to circumvent thoses limitations, there is the Cstubs module of Ctypes.
 
 ## The default example.
 
@@ -54,5 +56,16 @@ let () = main ()
 ```
 
 ### Launch the different phases of compile and file generation
+
+Here are the all the steps needed to use the Ctypes stubs:
+
+1. Write a stubs module that is a functor which defines the bindings.
+2. Write a module that uses the bindings module and outputs a C file.
+3. Compile the program from step 2 and execute it.
+4. Compile the C program generated in step 3.
+5. Run the C program from step 4, generating an ML module.
+6. Compile the module generated in step 5.
+
+The following schema illustrate those steps:
 
 ![Ctypes Stubs generation schema](https://github.com/cedlemo/ctypes-stubs-generation-notes/raw/master/Ctypes_Stubs_generation.png)
