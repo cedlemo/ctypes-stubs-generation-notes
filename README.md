@@ -66,7 +66,7 @@ Here are the all the steps needed to use the Ctypes stubs:
 5. Run the C program from step 4, generating an ML module.
 6. Compile the module generated in step 5.
 
-The following schema illustrate those steps:
+The following schema illustrates those steps:
 
 ![Ctypes Stubs generation schema](https://github.com/cedlemo/ctypes-stubs-generation-notes/raw/master/Ctypes_Stubs_generation.png)
 
@@ -85,7 +85,7 @@ cstubs_structs_dune
 └── stubgen
 ```
 
-The bin directory will contains the `main.ml`, which is the main program. The
+The bin directory will contain the `main.ml`, which is the main program. The
 bindings directory is dedicated to the Ctypes bindings we want to use and in the
 stubgen there will be all the code generators.
 
@@ -117,7 +117,7 @@ cstubs_structs_dune
 ```
 
 Here I declare a library with the name "bindings" so that it can be included in
-the `bin/dune` file. In the last line there are the dependancies of the `bindings` library.
+the `bin/dune` file. In the last line there are the dependencies of the `bindings` library.
 
 * In the `stubgen/dune` file
 
@@ -144,10 +144,10 @@ In the first part, there is the declaration of an OCaml executable : `bindings_c
 generated from the file `stubgen/bindings_c_gen.ml` and from the `bindings` library,
 this is the first part of the step 3 described previously.
 
-Then a *rule* is declared, it describe how to generate the file `bindings_stubs_gen.c` from
-the executable `bindings_c_gen.exe`, this is the second part of the setp 3.
+Then a *rule* is declared, it describes how to generate the file `bindings_stubs_gen.c` from
+the executable `bindings_c_gen.exe`, this is the second part of the step 3.
 
-The last *rule* tell how the file `bindings_stubs_gen.c` is compiled into the
+The last *rule* tells how the file `bindings_stubs_gen.c` is compiled into the
 executable `bindings_stubs_gen.exe`, this is the step 4.
 
 * In the `bin/dune` file
@@ -164,7 +164,7 @@ executable `bindings_stubs_gen.exe`, this is the step 4.
 ```
 
 In the first part, there is the declaration of an OCaml executable `main.exe` and
- its dependancies.
+ its dependencies.
 
 In the last part, there is the rule for the generation of the file `bindings_stubs.ml`
 via the executable `bindings_stubs_gen.exe`, this is the part 5 described previously.
