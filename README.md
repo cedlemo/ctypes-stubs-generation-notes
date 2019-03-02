@@ -69,3 +69,102 @@ Here are the all the steps needed to use the Ctypes stubs:
 The following schema illustrate those steps:
 
 ![Ctypes Stubs generation schema](https://github.com/cedlemo/ctypes-stubs-generation-notes/raw/master/Ctypes_Stubs_generation.png)
+
+### Using Dune with the default example:
+
+* https://github.com/ocaml/dune/issues/135
+* https://github.com/janestreet/async_ssl
+
+This is quite simple for the default example, we just need to create a new directory
+tree that looks like that:
+
+```
+cstubs_structs_dune
+├── bin
+├── bindings
+└── stubgen
+```
+
+The bin directory will contains the `main.ml`, which is the main program. The
+bindings directory is dedicated to the Ctypes bindings we want to use and in the
+stubgen there will be all the code generators.
+
+Here is the directory tree with all the files of the default project:
+
+```
+cstubs_structs_dune
+├── bin
+│   ├── dune
+│   └── main.ml
+├── bindings
+│   ├── bindings.ml
+│   └── dune
+├── dune-project
+└── stubgen
+    ├── bindings_c_gen.ml
+    └── dune
+```
+
+#### Description of the dune files
+
+* In the `bindings/dune` file
+
+```
+(library
+ (name bindings)
+ (synopsis "Ctypes bindings that describe the lib FFI")
+ (libraries ctypes.stubs ctypes))
+```
+
+Here I declare a library with the name "bindings" so that it can be included in
+the `bin/dune` file. In the last line there are the dependancies of the `bindings` library.
+
+* In the `stubgen/dune` file
+
+```
+(executable
+ (name bindings_c_gen)
+ (modules bindings_c_gen)
+ (libraries bindings ctypes.stubs ctypes))
+
+(rule
+ (targets bindings_stubs_gen.c)
+ (deps (:stubgen ../stubgen/bindings_c_gen.exe))
+ (action (with-stdout-to %{targets} (run %{stubgen} -c))))
+
+(rule (targets bindings_stubs_gen.exe)
+ (deps (:first_dep bindings_stubs_gen.c))
+ (action
+  (bash
+   "%{cc} %{first_dep} -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` -I %{ocaml_where} -o %{targets}"))
+)
+```
+
+In the first part, there is the declaration of an OCaml executable : `bindings_c_gen.exe`,
+generated from the file `stubgen/bindings_c_gen.ml` and from the `bindings` library,
+this is the first part of the step 3 described previously.
+
+Then a *rule* is declared, it describe how to generate the file `bindings_stubs_gen.c` from
+the executable `bindings_c_gen.exe`, this is the second part of the setp 3.
+
+The last *rule* tell how the file `bindings_stubs_gen.c` is compiled into the
+executable `bindings_stubs_gen.exe`, this is the step 4.
+
+* In the `bin/dune` file
+
+```
+(executable (name main)
+ (libraries bindings ctypes.stubs ctypes ctypes.foreign)
+)
+
+(rule
+ (targets bindings_stubs.ml)
+ (deps ../stubgen/bindings_stubs_gen.exe)
+ (action (with-stdout-to %{targets} (run %{deps} -ml))))
+```
+
+In the first part, there is the declaration of an OCaml executable `main.exe` and
+ its dependancies.
+
+In the last part, there is the rule for the generation of the file `bindings_stubs.ml`
+via the executable `bindings_stubs_gen.exe`, this is the part 5 described previously.
