@@ -1,5 +1,13 @@
 # Understanding Ctypes C stubs generator.
 
+* [Introduction](#introduction)
+* [The default example](#the-default-example)
+  * [Write a stubs module that is a functor which defines the bindings](Write-a-stubs-module-that-is-a-functor-which-defines-the-bindings)
+  * [Write a module that uses the bindings module and outputs a C file](write-a-module-that-uses-the-bindings-module-and-outputs-a-c-file)
+  * [Launch the different phases of compile and file generation](launch-the-different-phases-of-compile-and-file-generation)
+  * [Using Dune with the default example](using-dune-with-the-default-example)
+    * [Description of the dune files](description-of-the-dune-files)
+
 ## Introduction
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
@@ -14,9 +22,9 @@ But this has some limitations with:
 
 In order to be able to circumvent thoses limitations, there is the Cstubs module of Ctypes.
 
-## The default example.
+## The default example
 
-### Write a stubs module that is a functor which defines the bindings.
+### Write a stubs module that is a functor which defines the bindings
 
 * bindings.ml
 ```ocaml
@@ -37,7 +45,7 @@ module Stubs = functor (S : Cstubs_structs.TYPE) -> struct
 end
 ```
 
-### Write a module that uses the bindings module and outputs a C file.
+### Write a module that uses the bindings module and outputs a C file
 
 * bindings_c_gen.ml
 
@@ -70,7 +78,7 @@ The following schema illustrates those steps:
 
 ![Ctypes Stubs generation schema](https://github.com/cedlemo/ctypes-stubs-generation-notes/raw/master/Ctypes_Stubs_generation.png)
 
-### Using Dune with the default example:
+### Using Dune with the default example
 
 * https://github.com/ocaml/dune/issues/135
 * https://github.com/janestreet/async_ssl
@@ -168,3 +176,4 @@ In the first part, there is the declaration of an OCaml executable `main.exe` an
 
 In the last part, there is the rule for the generation of the file `bindings_stubs.ml`
 via the executable `bindings_stubs_gen.exe`, this is the part 5 described previously.
+
