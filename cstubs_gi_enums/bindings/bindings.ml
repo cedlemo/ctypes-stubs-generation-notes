@@ -20,7 +20,7 @@ type baseinfo_type =
   | Type (** type information, see Type_info *)
   | Unresolved (** unresolved type, a type which is not present in the typelib, or any of its dependencies. *)
 
-module Enums = functor (T : Cstubs_structs.TYPE) -> struct
+module Enums = functor (T : Cstubs.Types.TYPE) -> struct
   let gi_info_type_invalid = T.constant "GI_INFO_TYPE_INVALID" T.int64_t
   let gi_info_type_function = T.constant "GI_INFO_TYPE_FUNCTION" T.int64_t
   let gi_info_type_callback = T.constant "GI_INFO_TYPE_CALLBACK" T.int64_t
