@@ -1,0 +1,9 @@
+(executable
+  (name main)
+  (libraries bindings ctypes.stubs ctypes ctypes.foreign)
+)
+
+(rule
+  (targets bindings_stubs.ml)
+  (deps ../stubgen/bindings_stubs_gen.exe)
+  (action (with-stdout-to %{targets} (run %{deps} -ml))))

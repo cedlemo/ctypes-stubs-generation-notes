@@ -1,0 +1,22 @@
+(executable
+ (name bindings_c_gen)
+ (modules bindings_c_gen)
+ (libraries bindings ctypes.stubs ctypes))
+
+(rule
+ (targets bindings_stubs_gen.c)
+ (deps (:stubgen ../stubgen/bindings_c_gen.exe))
+ (action (with-stdout-to %{targets} (run %{stubgen} -c))))
+
+(rule (targets bindings_stubs_gen.exe)
+ (deps bindings_stubs_gen.c gi-ccopt gi-cclib)
+ (action
+  (bash
+   "%{cc} bindings_stubs_gen.c -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` -I %{ocaml_where} -o %{targets} $(< gi-ccopt) $(< gi-cclib)"))
+)
+
+(rule
+  (targets c_flags.sexp c_library_flags.sexp ccopts.sexp gi-cclib gi-ccopt)
+  (deps    (:x ../config/discover.exe))
+  (action  (run %{x} -ocamlc %{ocamlc}))
+)
