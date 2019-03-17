@@ -8,6 +8,8 @@
   * [Using Dune with the default example](using-dune-with-the-default-example)
     * [Description of the dune files](description-of-the-dune-files)
 
+* [Cstubs Enums bindings from the GObject-Introspection library](Enums bindings from the GObject-Introspection library)
+
 ## Introduction
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
@@ -177,3 +179,54 @@ In the first part, there is the declaration of an OCaml executable `main.exe` an
 In the last part, there is the rule for the generation of the file `bindings_stubs.ml`
 via the executable `bindings_stubs_gen.exe`, this is the part 5 described previously.
 
+## Cstubs Enums bindings from the GObject-Introspection library
+
+In this example I will describe how to use the Ctypes Stubs module to bind C enums
+ with `Cstubs.Types.TYPE.enum` and especially the enum `GITypeInfo` whith a `discover.exe`
+ application which will be able to get the libs and flags needed to compile the
+ intermediate C generator.
+
+```c
+typedef enum
+{
+  GI_INFO_TYPE_INVALID,
+  GI_INFO_TYPE_FUNCTION,
+  GI_INFO_TYPE_CALLBACK,
+  GI_INFO_TYPE_STRUCT,
+  GI_INFO_TYPE_BOXED,
+  GI_INFO_TYPE_ENUM,         /*  5 */
+  GI_INFO_TYPE_FLAGS,
+  GI_INFO_TYPE_OBJECT,
+  GI_INFO_TYPE_INTERFACE,
+  GI_INFO_TYPE_CONSTANT,
+  GI_INFO_TYPE_INVALID_0,    /* 10 */
+  GI_INFO_TYPE_UNION,
+  GI_INFO_TYPE_VALUE,
+  GI_INFO_TYPE_SIGNAL,
+  GI_INFO_TYPE_VFUNC,
+  GI_INFO_TYPE_PROPERTY,     /* 15 */
+  GI_INFO_TYPE_FIELD,
+  GI_INFO_TYPE_ARG,
+  GI_INFO_TYPE_TYPE,
+  GI_INFO_TYPE_UNRESOLVED
+} GIInfoType;
+```
+
+Here is the file hierarchy for this:
+
+```
+/
+├── bin
+│   ├── dune
+│   └── main.ml
+├── bindings
+│   ├── bindings.ml
+│   └── dune
+├── config
+│   ├── discover.ml
+│   └── dune
+├── dune-project
+└── stubgen
+    ├── bindings_c_gen.ml
+    └── dune
+```
