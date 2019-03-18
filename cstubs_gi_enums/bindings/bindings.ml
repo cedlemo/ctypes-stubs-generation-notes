@@ -42,7 +42,7 @@ module Enums = functor (T : Cstubs.Types.TYPE) -> struct
   let gi_info_type_type = T.constant "GI_INFO_TYPE_TYPE" T.int64_t
   let gi_info_type_unresolved = T.constant "GI_INFO_TYPE_UNRESOLVED" T.int64_t
 
-  let baseinfo_type = T.enum "baseinfo_type" [
+  let baseinfo_type = T.enum "GIInfoType" ~typedef:true [
       Invalid, gi_info_type_invalid;
       Function, gi_info_type_function;
       Callback, gi_info_type_callback;
