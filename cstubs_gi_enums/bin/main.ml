@@ -1,4 +1,4 @@
-module Stubs = Bindings.Stubs(Bindings_stubs)
+module Stubs = Bindings.Enums(Bindings_stubs)
 
 let main () =
   ()
