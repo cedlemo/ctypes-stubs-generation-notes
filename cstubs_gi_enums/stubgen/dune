@@ -12,11 +12,11 @@
  (deps bindings_stubs_gen.c gi-ccopt gi-cclib)
  (action
   (bash
-   "%{cc} bindings_stubs_gen.c -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` -I %{ocaml_where} -o %{targets} $(< gi-ccopt) $(< gi-cclib)"))
+   "%{cc} bindings_stubs_gen.c -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` -I %{ocaml_where} $(< gi-ccopt) $(< gi-cclib) -o %{targets}"))
 )
 
 (rule
-  (targets c_flags.sexp c_library_flags.sexp ccopts.sexp gi-cclib gi-ccopt)
+  (targets gi-cclib gi-ccopt)
   (deps    (:x ../config/discover.exe))
   (action  (run %{x} -ocamlc %{ocamlc}))
 )
