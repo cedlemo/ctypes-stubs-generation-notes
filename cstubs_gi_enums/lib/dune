@@ -1,0 +1,18 @@
+(library
+ (name        gi)
+  (libraries ctypes ctypes.foreign str bindings )
+  (c_flags         (:include c_flags.sexp))
+  (c_library_flags (:include c_library_flags.sexp))
+  (ocamlopt_flags (-ccopt (:include ccopts.sexp)))
+)
+
+(rule
+  (targets c_flags.sexp c_library_flags.sexp ccopts.sexp)
+  (deps    (:x ../config/discover.exe))
+  (action  (run %{x} -ocamlc %{ocamlc}))
+)
+
+(rule
+  (targets bindings_stubs.ml)
+  (deps ../stubgen/bindings_stubs_gen.exe)
+  (action (with-stdout-to %{targets} (run %{deps} -ml))))
