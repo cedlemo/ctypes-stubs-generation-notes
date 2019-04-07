@@ -1,17 +1,15 @@
 # Understanding Ctypes C stubs generator.
 
-* [Introduction](#introduction)
 * [The default example](#the-default-example)
-  * [Write a stubs module that is a functor which defines the bindings](Write-a-stubs-module-that-is-a-functor-which-defines-the-bindings)
-  * [Write a module that uses the bindings module and outputs a C file](write-a-module-that-uses-the-bindings-module-and-outputs-a-c-file)
-  * [Launch the different phases of compile and file generation](launch-the-different-phases-of-compile-and-file-generation)
-  * [Using Dune with the default example](using-dune-with-the-default-example)
-    * [Description of the dune files](description-of-the-dune-files)
+  * [Write a stubs module that is a functor which defines the bindings](#Write-a-stubs-module-that-is-a-functor-which-defines-the-bindings)
+  * [Write a module that uses the bindings module and outputs a C file](#write-a-module-that-uses-the-bindings-module-and-outputs-a-c-file)
+  * [Launch the different phases of compile and file generation](#launch-the-different-phases-of-compile-and-file-generation)
+  * [Using Dune with the default example](#using-dune-with-the-default-example)
+    * [Description of the dune files](#description-of-the-dune-files)
 
-* [Cstubs Enums bindings from the GObject-Introspection library](Enums bindings from the GObject-Introspection library)
+* [Cstubs Enums bindings from the GObject-Introspection library](#Enums bindings from the GObject-Introspection library)
   * [Introduction](#introduction)
   * [Directory structure](#directory-strucure)
-## Introduction
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
 
