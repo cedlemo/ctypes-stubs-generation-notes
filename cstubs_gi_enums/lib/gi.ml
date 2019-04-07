@@ -29,9 +29,6 @@ module Repository = struct
   let f_message = field gerror "message" (string)
   let _ = seal gerror
 
-  let get_default =
-    foreign "g_irepository_get_default" (void @-> returning repository_typ)
-
   let require ?repository namespace ?version () =
     let require_raw =
     foreign "g_irepository_require"
