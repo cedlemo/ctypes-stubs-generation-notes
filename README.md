@@ -9,7 +9,8 @@
     * [Description of the dune files](description-of-the-dune-files)
 
 * [Cstubs Enums bindings from the GObject-Introspection library](Enums bindings from the GObject-Introspection library)
-
+  * [Introduction](#introduction)
+  * [Directory structure](#directory-strucure)
 ## Introduction
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
@@ -181,9 +182,10 @@ via the executable `bindings_stubs_gen.exe`, this is the part 5 described previo
 
 ## Cstubs Enums bindings from the GObject-Introspection library
 
+### Introduction
 In this example I will describe how to use the Ctypes Stubs module to bind C enums
- with `Cstubs.Types.TYPE.enum` and especially the enum `GITypeInfo`.
-Here is the following enum that we want to bind:
+ with `Cstubs.Types.TYPE.enum`. The enum used come from the `gobject-introspection`
+ library and is called `GITypeInfo`. Here is it's declaration:
 
 ```c
 typedef enum
@@ -211,7 +213,45 @@ typedef enum
 } GIInfoType;
 ```
 
+In order to test if the bindings work, I will need to create bindings for the
+following functions:
+
+* `g_irepository_find_by_name`
+* `g_irepository_require`
+* `g_base_info_get_type`
+* `g_base_info_unref`
+
+and data structure:
+* `Base_info`
+* `GError`
+
+Without going too much in the details because this is related to the basic usage
+of Ctypes, the idea to test the bindings is :
+* to load the GObject-Introspection repository of the `GObject` namespace (ie. we
+load the description of the library GObject)
+* then to search the [`Value` structure in the current repository](https://developer.gnome.org/gobject/stable/gobject-Generic-values.html#GValue-struct) and get it as a `Base_info` type.
+* then to test if our bindings match it as a `GI_INFO_TYPE_STRUCT`.
+
+So the main executable will look like this:
+
+```ocaml
+let namespace = "GObject"
+let typelib = Gi.Repository.require namespace ()
+let struct_name = "Value"
+
+let test_baseinfo_get_type () =
+  match Gi.Repository.find_by_name namespace struct_name with
+  | None -> prerr_endline "No base info found"; exit 1
+  | Some base_info ->
+      match Gi.Base_info.get_type base_info with
+        | Struct -> print_endline "It works!"
+      | _ -> prerr_endline "Bad type"; exit 1
+
+let () = test_baseinfo_get_type ()
 Here is the file hierarchy for this:
+```
+
+### Directory structure
 
 ```
 /
@@ -233,16 +273,18 @@ Here is the file hierarchy for this:
     └── dune
 ```
 
-* the **bin** directory contain the main executable used to test the bindings.
-* the **config** directory containw the `discover.exe` code that is used to discover
+* the **bin** directory contains the main executable used to test the bindings.
+* the **config** directory contains the `discover.exe` code that is used to discover
  the libs and flags needed to compile the intermediate code generator and library.
  The `discover.exe` create differents files
-   -
-   -
-   -
-   -
-   -
-* the **bindings** directory
-* the **stubgen** directory
-* the **lib** directory
+   - *c_flags.sexp*
+   - *c_library_flags.sexp*
+   - *ccopts.sexp*
+   - *gi-cclib*
+   - *gi-ccopt*
+* the **bindings** directory contains the code that defines the enum bindings and
+ that will be used by the C Stubs generator `bindings_c_gen.ml`.
+* the **stubgen** directory contains the C Stubs generator `bindings_c_gen.ml`
+* the **lib** directory will contains all the bindings in a library called *gi*.
+
 
