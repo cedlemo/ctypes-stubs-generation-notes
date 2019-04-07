@@ -274,15 +274,55 @@ Here is the file hierarchy for this:
 * the **bin** directory contains the main executable used to test the bindings.
 * the **config** directory contains the `discover.exe` code that is used to discover
  the libs and flags needed to compile the intermediate code generator and library.
- The `discover.exe` create differents files
-   - *c_flags.sexp*
-   - *c_library_flags.sexp*
-   - *ccopts.sexp*
-   - *gi-cclib*
-   - *gi-ccopt*
 * the **bindings** directory contains the code that defines the enum bindings and
  that will be used by the C Stubs generator `bindings_c_gen.ml`.
 * the **stubgen** directory contains the C Stubs generator `bindings_c_gen.ml`
 * the **lib** directory will contains all the bindings in a library called *gi*.
 
+### 2 c The config directory
 
+In directory, there are 2 files, the *dune* file and the *discover.ml* file.
+
+The *dune* file is really simple, it declare an executable called discover.exe
+that depends on different libraries.
+
+```dune
+(executable
+ (name discover)
+ (libraries base stdio configurator))
+```
+
+The `discover.exe` create different files that will be used to pass C flags and
+libraries informations during the compilation steps of both C and OCaml binaries.
+Those files are generated at build time and can be found in *_build/default/stubgen*.
+   - *c_flags.sexp*
+   ```
+   (-I/usr/lib/libffi-3.2.1/include -I/usr/include/gobject-introspection-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/libffi-3.2.1/include -pthread)
+   ```
+   - *c_library_flags.sexp*
+   ```
+   (-L/usr/lib/../lib -lffi -lgirepository-1.0 -lgobject-2.0 -lglib-2.0)
+   ```
+   - *ccopts.sexp*
+   ```
+   (-Wl,-no-as-needed)
+   ```
+   - *gi-cclib*
+   ```
+   -L/usr/lib/../lib -lffi -lgirepository-1.0 -lgobject-2.0 -lglib-2.0
+   ```
+   - *gi-ccopt*
+   ```
+   -I/usr/lib/libffi-3.2.1/include -I/usr/include/gobject-introspection-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/libffi-3.2.1/include -pthread
+   ```
+
+When a we will need one of those files, for a build step, we will add those kind of
+rules in the *dune* file:
+
+```
+(rule
+  (targets c_flags.sexp c_library_flags.sexp ccopts.sexp)
+  (deps    (:x ../config/discover.exe))
+  (action  (run %{x} -ocamlc %{ocamlc}))
+)
+```
