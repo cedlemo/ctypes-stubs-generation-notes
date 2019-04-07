@@ -182,9 +182,8 @@ via the executable `bindings_stubs_gen.exe`, this is the part 5 described previo
 ## Cstubs Enums bindings from the GObject-Introspection library
 
 In this example I will describe how to use the Ctypes Stubs module to bind C enums
- with `Cstubs.Types.TYPE.enum` and especially the enum `GITypeInfo` whith a `discover.exe`
- application which will be able to get the libs and flags needed to compile the
- intermediate C generator.
+ with `Cstubs.Types.TYPE.enum` and especially the enum `GITypeInfo`.
+Here is the following enum that we want to bind:
 
 ```c
 typedef enum
@@ -226,7 +225,24 @@ Here is the file hierarchy for this:
 │   ├── discover.ml
 │   └── dune
 ├── dune-project
+├── lib
+│   ├── dune
+│   └── gi.ml
 └── stubgen
     ├── bindings_c_gen.ml
     └── dune
 ```
+
+* the **bin** directory contain the main executable used to test the bindings.
+* the **config** directory containw the `discover.exe` code that is used to discover
+ the libs and flags needed to compile the intermediate code generator and library.
+ The `discover.exe` create differents files
+   -
+   -
+   -
+   -
+   -
+* the **bindings** directory
+* the **stubgen** directory
+* the **lib** directory
+
