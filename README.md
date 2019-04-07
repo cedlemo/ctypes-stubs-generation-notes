@@ -1,15 +1,15 @@
 # Understanding Ctypes C stubs generator.
 
-* [The default example](#the-default-example)
-  * [Write a stubs module that is a functor which defines the bindings](#Write-a-stubs-module-that-is-a-functor-which-defines-the-bindings)
-  * [Write a module that uses the bindings module and outputs a C file](#write-a-module-that-uses-the-bindings-module-and-outputs-a-c-file)
-  * [Launch the different phases of compile and file generation](#launch-the-different-phases-of-compile-and-file-generation)
-  * [Using Dune with the default example](#using-dune-with-the-default-example)
+* [1 The default example](#1-the-default-example)
+  * [1 a Write a stubs module that is a functor which defines the bindings](#1-a-write-a-stubs-module-that-is-a-functor-which-defines-the-bindings)
+  * [1 b Write a module that uses the bindings module and outputs a C file](#1-b-write-a-module-that-uses-the-bindings-module-and-outputs-a-c-file)
+  * [1 c Launch the different phases of compile and file generation](#1-c-launch-the-different-phases-of-compile-and-file-generation)
+  * [1 d Using Dune with the default example](#1-d-using-dune-with-the-default-example)
     * [Description of the dune files](#description-of-the-dune-files)
 
-* [Cstubs Enums bindings from the GObject-Introspection library](#Enums bindings from the GObject-Introspection library)
-  * [Introduction](#introduction)
-  * [Directory structure](#directory-strucure)
+* [2 Cstubs Enums bindings from the GObject-Introspection library](#2-enums-bindings-from-the-gobject-introspection-library)
+  * [2 a Introduction](#2-a-introduction)
+  * [2 b Directory structure](#2-b-directory-strucure)
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
 
@@ -23,9 +23,9 @@ But this has some limitations with:
 
 In order to be able to circumvent thoses limitations, there is the Cstubs module of Ctypes.
 
-## The default example
+## 1 The default example
 
-### Write a stubs module that is a functor which defines the bindings
+### 1 a Write a stubs module that is a functor which defines the bindings
 
 * bindings.ml
 ```ocaml
@@ -46,7 +46,7 @@ module Stubs = functor (S : Cstubs_structs.TYPE) -> struct
 end
 ```
 
-### Write a module that uses the bindings module and outputs a C file
+### 1 b Write a module that uses the bindings module and outputs a C file
 
 * bindings_c_gen.ml
 
@@ -64,7 +64,7 @@ let main () =
 let () = main ()
 ```
 
-### Launch the different phases of compile and file generation
+### 1 c Launch the different phases of compile and file generation
 
 Here are the all the steps needed to use the Ctypes stubs:
 
@@ -79,7 +79,7 @@ The following schema illustrates those steps:
 
 ![Ctypes Stubs generation schema](https://github.com/cedlemo/ctypes-stubs-generation-notes/raw/master/Ctypes_Stubs_generation.png)
 
-### Using Dune with the default example
+### 1 d Using Dune with the default example
 
 * https://github.com/ocaml/dune/issues/135
 * https://github.com/janestreet/async_ssl
@@ -178,9 +178,9 @@ In the first part, there is the declaration of an OCaml executable `main.exe` an
 In the last part, there is the rule for the generation of the file `bindings_stubs.ml`
 via the executable `bindings_stubs_gen.exe`, this is the part 5 described previously.
 
-## Cstubs Enums bindings from the GObject-Introspection library
+## 2 Cstubs Enums bindings from the GObject-Introspection library
 
-### Introduction
+### 2 a Introduction
 In this example I will describe how to use the Ctypes Stubs module to bind C enums
  with `Cstubs.Types.TYPE.enum`. The enum used come from the `gobject-introspection`
  library and is called `GITypeInfo`. Here is it's declaration:
@@ -249,7 +249,7 @@ let () = test_baseinfo_get_type ()
 Here is the file hierarchy for this:
 ```
 
-### Directory structure
+### 2 b Directory structure
 
 ```
 /
