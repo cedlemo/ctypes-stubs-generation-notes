@@ -6,10 +6,10 @@
   * [1 c Launch the different phases of compile and file generation](#1-c-launch-the-different-phases-of-compile-and-file-generation)
   * [1 d Using Dune with the default example](#1-d-using-dune-with-the-default-example)
     * [Description of the dune files](#description-of-the-dune-files)
-
 * [2 Cstubs Enums bindings from the GObject-Introspection library](#2-enums-bindings-from-the-gobject-introspection-library)
   * [2 a Introduction](#2-a-introduction)
-  * [2 b Directory structure](#2-b-directory-strucure)
+  * [2 b Directory structure](#2-b-directory-strutcure)
+  * [2 c The config directory](#2-c-the-config-directory)
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
 
@@ -182,7 +182,7 @@ via the executable `bindings_stubs_gen.exe`, this is the part 5 described previo
 
 ### 2 a Introduction
 In this example I will describe how to use the Ctypes Stubs module to bind C enums
- with `Cstubs.Types.TYPE.enum`. The enum used come from the `gobject-introspection`
+ with `Cstubs.Types.TYPE.enum`. The enum used comes from the `gobject-introspection`
  library and is called `GITypeInfo`. Here is it's declaration:
 
 ```c
@@ -226,9 +226,9 @@ and data structure:
 Without going too much in the details because this is related to the basic usage
 of Ctypes, the idea to test the bindings is :
 * to load the GObject-Introspection repository of the `GObject` namespace (ie. we
-load the description of the library GObject)
-* then to search the [`Value` structure in the current repository](https://developer.gnome.org/gobject/stable/gobject-Generic-values.html#GValue-struct) and get it as a `Base_info` type.
-* then to test if our bindings match it as a `GI_INFO_TYPE_STRUCT`.
+load the description of the library `GObject`)
+* then search the [`Value` structure in the current repository](https://developer.gnome.org/gobject/stable/gobject-Generic-values.html#GValue-struct) and get it as a `Base_info` type.
+* then test if our bindings match it as a `GI_INFO_TYPE_STRUCT`.
 
 So the main executable will look like this:
 
@@ -281,10 +281,10 @@ Here is the file hierarchy for this:
 
 ### 2 c The config directory
 
-In directory, there are 2 files, the *dune* file and the *discover.ml* file.
+In the config directory, there are 2 files, the *dune* file and the *discover.ml* file.
 
-The *dune* file is really simple, it declare an executable called discover.exe
-that depends on different libraries.
+The *dune* file is really simple, it declares an executable called *discover.exe*
+that depends on the libraries base, stdio and configurator.
 
 ```dune
 (executable
@@ -292,8 +292,9 @@ that depends on different libraries.
  (libraries base stdio configurator))
 ```
 
-The `discover.exe` create different files that will be used to pass C flags and
-libraries informations during the compilation steps of both C and OCaml binaries.
+The `discover.exe` creates different files that will be used to pass C flags and
+libraries information during the compilation steps of both C and OCaml binaries.
+
 Those files are generated at build time and can be found in *_build/default/stubgen*.
    - *c_flags.sexp*
    ```
@@ -316,7 +317,7 @@ Those files are generated at build time and can be found in *_build/default/stub
    -I/usr/lib/libffi-3.2.1/include -I/usr/include/gobject-introspection-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/libffi-3.2.1/include -pthread
    ```
 
-When a we will need one of those files, for a build step, we will add those kind of
+When we will need one of those files, for a build step, we will add those kind of
 rules in the *dune* file:
 
 ```
@@ -326,3 +327,4 @@ rules in the *dune* file:
   (action  (run %{x} -ocamlc %{ocamlc}))
 )
 ```
+
