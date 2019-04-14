@@ -49,5 +49,5 @@ let () =
     write_sexp "c_flags.sexp"         conf.cflags;
     write_sexp "c_library_flags.sexp" conf.libs;
     write_sexp "ccopts.sexp"          ccopts;
-    write_flags "gi-cclib"            conf.libs;
-    write_flags "gi-ccopt"            conf.cflags)
+    write_flags "c_library_flags"     conf.libs;
+    write_flags "c_flags"             conf.cflags)

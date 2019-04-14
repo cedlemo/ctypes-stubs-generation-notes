@@ -1,8 +1,6 @@
 (executable
   (name main)
   (libraries gi ctypes.stubs ctypes ctypes.foreign)
-  ;(ocamlc_flags (-lffi -lgirepository-1.0 -lgobject-2.0 -lglib-2.0))
-  ;(ocamlopt_flags (-ccopt (:include ../stubgen/ccopts.sexp)))
 )
 
 (rule

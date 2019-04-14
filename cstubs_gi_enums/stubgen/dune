@@ -9,14 +9,14 @@
  (action (with-stdout-to %{targets} (run %{stubgen} -c))))
 
 (rule (targets bindings_stubs_gen.exe)
- (deps bindings_stubs_gen.c gi-ccopt gi-cclib)
+ (deps bindings_stubs_gen.c c_flags c_library_flags)
  (action
   (bash
-   "%{cc} bindings_stubs_gen.c -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` -I %{ocaml_where} $(< gi-ccopt) $(< gi-cclib) -o %{targets}"))
+   "%{cc} bindings_stubs_gen.c -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` -I %{ocaml_where} $(< c_flags) $(< c_library_flags) -o %{targets}"))
 )
 
 (rule
-  (targets gi-cclib gi-ccopt)
+  (targets c_library_flags c_flags)
   (deps    (:x ../config/discover.exe))
   (action  (run %{x} -ocamlc %{ocamlc}))
 )
