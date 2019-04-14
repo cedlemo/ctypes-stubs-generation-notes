@@ -12,6 +12,8 @@
   * [2 c The config directory](#2-c-the-config-directory)
   * [2 d The bindings directory](#2-d-the-bindings-directory)
   * [2 e The stubgen directory](#2-e-the-stubgen-directory)
+  * [2 f The lib directory](#2-f-the-lib-directory)
+* [Conclusion](#conclusion)
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
 
@@ -438,10 +440,68 @@ The following dune rule is used to build the *bindings_stubs_gen.exe*:
 )
 ```
 The particularity of this rule is that it uses the **bash** stanza to call the C
-compiler with `%{cc}`. [This is variable automaticaly expanded by dune](https://dune.readthedocs.io/en/latest/dune-files.html?expansion#variables-expansion).
+compiler with `%{cc}`. [This is variable automatically expande by dune](https://dune.readthedocs.io/en/latest/dune-files.html?expansion#variables-expansion).
 
 The executable is then used to generate the *bindings_stubs.ml* file in the
 *bindings* directory.
 
+### 2 f The lib directory
 
+This is the final directory in which the classical Ctypes bindings will be "merged"
+with the automatically generated bindings for the enum in order to create a
+library for the bindings.
 
+The library depends on the *Bindings_stubs*, and the build step needs some flags.
+The following rules describe to dune how to generate those dependencies.
+
+```
+(rule
+  (targets c_flags.sexp c_library_flags.sexp ccopts.sexp)
+  (deps    (:x ../config/discover.exe))
+  (action  (run %{x} -ocamlc %{ocamlc}))
+)
+
+(rule
+  (targets bindings_stubs.ml)
+  (deps ../stubgen/bindings_stubs_gen.exe)
+  (action (with-stdout-to %{targets} (run %{deps} -ml))))
+```
+
+The library is build with :
+
+```
+(library
+ (name        gi)
+  (libraries ctypes ctypes.foreign str bindings )
+  (c_flags         (:include c_flags.sexp))
+  (c_library_flags (:include c_library_flags.sexp))
+  (ocamlopt_flags (-ccopt (:include ccopts.sexp)))
+)
+```
+
+# Conclusion
+
+In the main application, the *gi* library with the bindings can then be used:
+
+```ocaml
+let namespace = "GObject"
+let typelib = Gi.Repository.require namespace ()
+let struct_name = "Value"
+
+let test_baseinfo_get_type () =
+  match Gi.Repository.find_by_name namespace struct_name with
+  | None -> prerr_endline "No base info found"; exit 1
+  | Some base_info ->
+      match Gi.Base_info.get_type base_info with
+        | Struct -> print_endline "It works!"
+      | _ -> prerr_endline "Bad type"; exit 1
+
+let () = test_baseinfo_get_type ()
+```
+
+Run the build process and the executable with `dune exec bin/main.exe --profile=release`.
+The following output is displayed:
+
+```
+It works!
+```
