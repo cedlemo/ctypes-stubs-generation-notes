@@ -293,11 +293,22 @@ that depends on the libraries base, stdio and configurator.
  (libraries base stdio configurator))
 ```
 
-The `discover.exe` creates different files that will be used to pass C flags and
-libraries information during the compilation steps of both C and OCaml binaries.
+The `discover.exe` creates different files that will be used to pass flags during
+the compilation steps of both C and OCaml binaries. Those flags are of two types:
+* cflags: compiler parameters (flags) that can be for example [`-pthread`](https://stackoverflow.com/questions/2127797/significance-of-pthread-flag-when-compiling) and include directories information (`-I/usr/lib/libffi-3.2.1/include`).
+Those flags are used in the early stage of the C compilation process, the [*preprocessing* step](https://stackoverflow.com/questions/6264249/how-does-the-compilation-linking-process-work).
+* libs: those flags which look like this `-lgirepository-1.0` or `-L/usr/lib/../lib`
+are used during the C linking phases. The `-lgirepository-1.0` flag tells the compiler
+to link the girepository library to the program, while the `-L/usr/lib/../lib` tells
+the compilater where to search for library.
 
+The [OCaml compiler accepts the following options](https://caml.inria.fr/pub/docs/manual-ocaml/native.html):
+* -cclib -llibname Pass the -llibname option to the linker . This causes the given C library to be linked with the program.
 Those files are generated at build time and can be found in *_build/default/stubgen*.
+* -ccopt option Pass the given option to the C compiler and linker. For instance,-ccopt -Ldir causes the C linker to search for C libraries in directory dir.
+
    - *c_flags.sexp*
+
    ```
    (-I/usr/lib/libffi-3.2.1/include -I/usr/include/gobject-introspection-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/libffi-3.2.1/include -pthread)
    ```
@@ -309,16 +320,16 @@ Those files are generated at build time and can be found in *_build/default/stub
    ```
    (-Wl,-no-as-needed)
    ```
-   - *gi-cclib*
+   - *c_library_flags*
    ```
    -L/usr/lib/../lib -lffi -lgirepository-1.0 -lgobject-2.0 -lglib-2.0
    ```
-   - *gi-ccopt*
+   - *c_flags*
    ```
    -I/usr/lib/libffi-3.2.1/include -I/usr/include/gobject-introspection-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/libffi-3.2.1/include -pthread
    ```
 
-When we will need one of those files, for a build step, we will add those kind of
+When one of those files is needed, for a build step, one will just use those kind of
 rules in the *dune* file:
 
 ```
@@ -331,7 +342,7 @@ rules in the *dune* file:
 
 ### 2 d The bindings directory
 
-in a *bindings.ml* file, we will define a variant type called `baseinfo_type`:
+in a *bindings.ml* file, a variant type called *baseinfo_type* is defined:
 
 ```ocaml
 type baseinfo_type =
@@ -357,7 +368,8 @@ type baseinfo_type =
   | Unresolved (** unresolved type, a type which is not present in the typelib, or any of its dependencies. *)
 ```
 
-and a functor called *Enums* in which the bindings are defined:
+and in a functor called *Enums*, we define the bindings between the variant type
+tags and the corresponding enum values:
 
 ```ocaml
 module Enums = functor (T : Cstubs.Types.TYPE) -> struct
