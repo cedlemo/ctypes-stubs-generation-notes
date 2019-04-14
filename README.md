@@ -1,5 +1,6 @@
-# Understanding Ctypes C stubs generator.
+# Understanding Ctypes C stubs generation.
 
+* [Introduction](#introduction)
 * [1 The default example](#1-the-default-example)
   * [1 a Write a stubs module that is a functor which defines the bindings](#1-a-write-a-stubs-module-that-is-a-functor-which-defines-the-bindings)
   * [1 b Write a module that uses the bindings module and outputs a C file](#1-b-write-a-module-that-uses-the-bindings-module-and-outputs-a-c-file)
@@ -15,6 +16,8 @@
   * [2 f The lib directory](#2-f-the-lib-directory)
 * [Conclusion](#conclusion)
 
+## Introduction
+
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
 
 > Ctypes is generally used to specify how to call C code using a DSL that is executed at runtime.
@@ -26,6 +29,16 @@ But this has some limitations with:
 - constants
 
 In order to be able to circumvent thoses limitations, there is the Cstubs module of Ctypes.
+
+I write those notes because I didn't find easy to use the Cstubs module and I have
+not found any documentation on how to use it with dune. I first describe the steps
+in the default example [cstubs_structs](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs) from the
+git repository of Ctypes, then I explain how to build it with dune.
+
+In the second part I explain how to use the Cstubs enum bindings generator for
+the GObject-Introspection library and how to build those bindings with dune. Even
+if you have no interest in this library, this example shows how to discover and
+use the compile flags for all the involved build steps.
 
 ## 1 The default example
 
