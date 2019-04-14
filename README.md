@@ -10,7 +10,8 @@
   * [2 a Introduction](#2-a-introduction)
   * [2 b Directory structure](#2-b-directory-strutcure)
   * [2 c The config directory](#2-c-the-config-directory)
-  * [2 d The bindings directory](#2-d-The-bindings-directory)
+  * [2 d The bindings directory](#2-d-the-bindings-directory)
+  * [2 e The stubgen directory](#2-e-the-stubgen-directory)
 
 As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
 
@@ -19,7 +20,7 @@ As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/
 But this has some limitations with:
 - data types like:
   * structures
-  * [enums](https://discuss.ocaml.org/t/ctypes-enum-how-to-make-it-work/456/4?u=cedlemo)
+  * [enums](https://discuss.ocaml.org/t/ctypes-enum-how-to-make-it-work/456/4)
 - constants
 
 In order to be able to circumvent thoses limitations, there is the Cstubs module of Ctypes.
@@ -403,3 +404,44 @@ The dune file is really simple:
 )
 ```
 It just defines the library name and its dependencies.
+
+### 2 e The stubgen directory
+
+There are two files, the *bindings_c_gen.ml* and its build file called *dune*.
+In this directory, a *bindings_c_gen.exe* file is generated with the following
+rule:
+
+```
+(executable
+ (name bindings_c_gen)
+ (modules bindings_c_gen)
+ (libraries bindings ctypes.stubs ctypes))
+```
+
+When executed, this program generates the *bindings_stubs_gen.c*, which is the C
+source code for the bindings generator.
+
+```
+(rule
+ (targets bindings_stubs_gen.c)
+ (deps (:stubgen ../stubgen/bindings_c_gen.exe))
+ (action (with-stdout-to %{targets} (run %{stubgen} -c))))
+```
+
+The following dune rule is used to build the *bindings_stubs_gen.exe*:
+```
+(rule (targets bindings_stubs_gen.exe)
+ (deps bindings_stubs_gen.c c_flags c_library_flags)
+ (action
+  (bash
+   "%{cc} bindings_stubs_gen.c -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` -I %{ocaml_where} $(< c_flags) $(< c_library_flags) -o %{targets}"))
+)
+```
+The particularity of this rule is that it uses the **bash** stanza to call the C
+compiler with `%{cc}`. [This is variable automaticaly expanded by dune](https://dune.readthedocs.io/en/latest/dune-files.html?expansion#variables-expansion).
+
+The executable is then used to generate the *bindings_stubs.ml* file in the
+*bindings* directory.
+
+
+
