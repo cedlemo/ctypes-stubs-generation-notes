@@ -30,10 +30,7 @@ But this has some limitations with:
 
 In order to be able to circumvent thoses limitations, there is the Cstubs module of Ctypes.
 
-I write those notes because I didn't find easy to use the Cstubs module and I have
-not found any documentation on how to use it with dune. I first describe the steps
-in the default example [cstubs_structs](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs) from the
-git repository of Ctypes, then I explain how to build it with dune.
+I first describe the steps in the default example [cstubs_structs](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs) from the git repository of Ctypes, then I explain how to build it with dune.
 
 In the second part I explain how to use the Cstubs enum bindings generator for
 the GObject-Introspection library and how to build those bindings with dune. This
@@ -452,7 +449,7 @@ The following dune rule is used to build the *bindings_stubs_gen.exe*:
 )
 ```
 The particularity of this rule is that it uses the **bash** stanza to call the C
-compiler with `%{cc}`. [This is variable automatically expande by dune](https://dune.readthedocs.io/en/latest/dune-files.html?expansion#variables-expansion).
+compiler with `%{cc}`. [This is variable automatically expanded by dune](https://dune.readthedocs.io/en/latest/dune-files.html?expansion#variables-expansion).
 
 The executable is then used to generate the *bindings_stubs.ml* file in the
 *bindings* directory.
@@ -463,7 +460,7 @@ This is the final directory in which the classical Ctypes bindings will be "merg
 with the automatically generated bindings for the enum in order to create a
 library for the bindings.
 
-The library depends on the *Bindings_stubs*, and the build step needs some flags.
+The library depends on the *Bindings_stubs*, and the build step needs some flags to compile.
 The following rules describe to dune how to generate those dependencies.
 
 ```
