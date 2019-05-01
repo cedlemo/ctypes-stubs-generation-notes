@@ -18,7 +18,7 @@
 
 ## Introduction
 
-As mentionned in the [README.md](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
+As mentionned in the [README.md of the Ctypes Cstubs example](https://github.com/ocamllabs/ocaml-ctypes/blob/master/examples/cstubs_structs/README.md),
 
 > Ctypes is generally used to specify how to call C code using a DSL that is executed at runtime.
 
@@ -36,9 +36,8 @@ in the default example [cstubs_structs](https://github.com/ocamllabs/ocaml-ctype
 git repository of Ctypes, then I explain how to build it with dune.
 
 In the second part I explain how to use the Cstubs enum bindings generator for
-the GObject-Introspection library and how to build those bindings with dune. Even
-if you have no interest in this library, this example shows how to discover and
-use the compile flags for all the involved build steps.
+the GObject-Introspection library and how to build those bindings with dune. This
+example shows how to discover the compile flags and use them for all the involved build steps.
 
 ## 1 The default example
 
@@ -228,7 +227,7 @@ typedef enum
 } GIInfoType;
 ```
 
-In order to test if the bindings work, I will need to create bindings for the
+In order to test if the bindings works, I will need to create bindings for the
 following functions:
 
 * `g_irepository_find_by_name`
@@ -236,7 +235,7 @@ following functions:
 * `g_base_info_get_type`
 * `g_base_info_unref`
 
-and data structure:
+and data structures:
 * `Base_info`
 * `GError`
 
@@ -309,7 +308,7 @@ that depends on the libraries base, stdio and configurator.
  (libraries base stdio configurator))
 ```
 
-The `discover.exe` creates different files that will be used to pass flags during
+The `discover.exe` binary creates different files that will be used to pass flags during
 the compilation steps of both C and OCaml binaries. Those flags are of two types:
 * cflags: compiler parameters (flags) that can be for example [`-pthread`](https://stackoverflow.com/questions/2127797/significance-of-pthread-flag-when-compiling) and include directories information (`-I/usr/lib/libffi-3.2.1/include`).
 Those flags are used in the early stage of the C compilation process, the [*preprocessing* step](https://stackoverflow.com/questions/6264249/how-does-the-compilation-linking-process-work).
